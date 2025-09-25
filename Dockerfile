@@ -16,5 +16,8 @@ COPY src ./src
 # Build the application
 RUN mvn package -DskipTests
 
+# Get the built jar file name and copy it
+RUN mv target/*.jar target/app.jar
+
 # Run the application
-ENTRYPOINT ["java","-jar","target/*.jar"]
+ENTRYPOINT ["java","-jar","target/app.jar"]
