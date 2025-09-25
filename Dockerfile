@@ -1,4 +1,20 @@
 FROM eclipse-temurin:17-jdk-alpine
-VOLUME /tmp
-COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+WORKDIR /app
+
+# Install Maven
+RUN apk add --no-cache maven
+
+# Copy pom.xml first to cache dependencies
+COPY pom.xml .
+
+# Download dependencies
+RUN mvn dependency:go-offline
+
+# Copy source code
+COPY src ./src
+
+# Build the application
+RUN mvn package -DskipTests
+
+# Run the application
+ENTRYPOINT ["java","-jar","target/*.jar"]
