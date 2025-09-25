@@ -2,10 +2,12 @@ services:
   - type: web
     name: confirmly
     env: docker
+    plan: free
     buildCommand: docker build -t confirmly .
     startCommand: docker run -p 8080:8080 confirmly
     envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
       - key: PORT
         value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+    healthCheckPath: /actuator/health

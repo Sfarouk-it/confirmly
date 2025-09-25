@@ -19,5 +19,8 @@ RUN mvn package -DskipTests
 # Get the built jar file name and copy it
 RUN mv target/*.jar target/app.jar
 
-# Run the application
-ENTRYPOINT ["java","-jar","target/app.jar"]
+# Expose port 8080
+EXPOSE 8080
+
+# Run the application with explicit port
+ENTRYPOINT ["java", "-jar", "target/app.jar", "--server.port=8080"]
