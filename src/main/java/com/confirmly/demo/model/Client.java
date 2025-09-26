@@ -1,7 +1,7 @@
 package com.confirmly.demo.model;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -20,7 +20,7 @@ public class Client {
     private String updatedAt;
 
     @OneToMany(mappedBy = "client")
-    private List<Messages> messages;
+    private List<Messages> messages = new ArrayList<>();
 
 
     public Client() {}
