@@ -12,6 +12,8 @@ public class Messages {
     private String text;
     private String timestamp;
 
+    private Client client;
+
     public Messages() {}
 
     public Messages(String id, String senderId, String text, String timestamp) {
@@ -52,5 +54,12 @@ public class Messages {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+    public Client getClient() {
+        return client;
+    }
     
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }
