@@ -3,15 +3,16 @@ package com.confirmly.demo.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.confirmly.demo.Services.MessengerWebhookService;
+import com.confirmly.demo.Services.WebhookService;
+
 
 @RestController
 @RequestMapping("/metaHookController")
 public class MetaHookController {
 
-    private final MessengerWebhookService webhookService;
+    private final WebhookService webhookService;
 
-    public MetaHookController(MessengerWebhookService webhookService) {
+    public MetaHookController(WebhookService webhookService) {
         this.webhookService = webhookService;
     }
 
