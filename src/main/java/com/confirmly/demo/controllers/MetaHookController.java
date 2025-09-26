@@ -1,11 +1,5 @@
 package com.confirmly.demo.controllers;
 
-import java.nio.charset.StandardCharsets;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,7 +63,7 @@ public class MetaHookController {
                     String senderId = messagingObj.getAsJsonObject("sender").get("id").getAsString();
 
                     if (messagingObj.has("message")) {
-                        // Text message received
+                        
                         String text = messagingObj.getAsJsonObject("message").get("text").getAsString();
                         System.out.println("Received message: " + text + " from " + senderId);
                         
