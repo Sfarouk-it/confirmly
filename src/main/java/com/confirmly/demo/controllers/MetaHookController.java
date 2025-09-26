@@ -53,34 +53,50 @@ public class MetaHookController {
 
         JsonObject webhookEvent = JsonParser.parseString(payload).getAsJsonObject();
         
-        if (webhookEvent.has("object") && webhookEvent.get("object").getAsString().equals("page")) {
-            for (JsonElement entry : webhookEvent.getAsJsonArray("entry")) {
-                JsonObject entryObj = entry.getAsJsonObject();
-                JsonArray messaging = entryObj.getAsJsonArray("messaging");
-                
-                for (JsonElement message : messaging) {
-                    JsonObject messagingObj = message.getAsJsonObject();
-                    String senderId = messagingObj.getAsJsonObject("sender").get("id").getAsString();
-
-                    if (messagingObj.has("message")) {
-                        
-                        String text = messagingObj.getAsJsonObject("message").get("text").getAsString();
-                        System.out.println("Received message: " + text + " from " + senderId);
-                        
-                        String responseText = apiCallService.generateResponse(text);
-
-                        messengerService.sendTextMessage(senderId, responseText);
-                    }
-                    else if (messagingObj.has("postback")) {
-                        // Handle postback
-                        String postbackPayload = messagingObj.getAsJsonObject("postback").get("payload").getAsString();
-                        System.out.println("Received postback: " + postbackPayload);
-                    }
-                }
-            }
+        if (isPageEvent(webhookEvent)) {
+            processWebhookEntries(webhookEvent);
         }
         
         return ResponseEntity.ok("EVENT_RECEIVED");
     }
 
+    private boolean isPageEvent(JsonObject webhookEvent) {
+        return webhookEvent.has("object") && 
+            webhookEvent.get("object").getAsString().equals("page");
+    }
+
+    private void processWebhookEntries(JsonObject webhookEvent) {
+        JsonArray entries = webhookEvent.getAsJsonArray("entry");
+        for (JsonElement entry : entries) {
+            JsonObject entryObj = entry.getAsJsonObject();
+            processMessaging(entryObj.getAsJsonArray("messaging"));
+        }
+    }
+
+    private void processMessaging(JsonArray messaging) {
+        for (JsonElement message : messaging) {
+            JsonObject messagingObj = message.getAsJsonObject();
+            String senderId = messagingObj.getAsJsonObject("sender").get("id").getAsString();
+
+            if (messagingObj.has("message")) {
+                handleMessage(messagingObj, senderId);
+            } else if (messagingObj.has("postback")) {
+                handlePostback(messagingObj);
+            }
+        }
+    }
+
+    private void handleMessage(JsonObject messagingObj, String senderId) {
+        String text = messagingObj.getAsJsonObject("message").get("text").getAsString();
+        System.out.println("Received message: " + text + " from " + senderId);
+        
+        String responseText = apiCallService.generateResponse(text);
+        messengerService.sendTextMessage(senderId, responseText);
+    }
+
+    private void handlePostback(JsonObject messagingObj) {
+        String postbackPayload = messagingObj.getAsJsonObject("postback")
+                .get("payload").getAsString();
+        System.out.println("Received postback: " + postbackPayload);
+    }
 }
