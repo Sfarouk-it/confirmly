@@ -3,10 +3,13 @@ package com.confirmly.demo.model;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
 public class Client {
+
+    @Id
     private String id;
     private String name;
     private String email;

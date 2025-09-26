@@ -1,10 +1,12 @@
 package com.confirmly.demo.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class Messages {
     
+    @Id
     private String id;
     private String senderId;
     private String text;
