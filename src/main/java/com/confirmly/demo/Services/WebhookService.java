@@ -40,7 +40,7 @@ public class WebhookService {
     public ResponseEntity<String> handleWebhook(String payload, String signature) {
         
         System.out.println("111111111111111111111111111111111");
-        if (isValidSignature(payload, signature)) {
+        if (!isValidSignature(payload, signature)) {
             System.out.println("333333333333333333333333333333");
             return ResponseEntity.status(401).body("Invalid signature");
         }
