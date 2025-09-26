@@ -1,9 +1,12 @@
 package com.confirmly.demo.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 @Entity
-public class client {
+public class Client {
     private String id;
     private String name;
     private String email;
@@ -13,10 +16,13 @@ public class client {
     private String createdAt;
     private String updatedAt;
 
+    @OneToMany(mappedBy = "client")
+    private List<Messages> messages;
 
-    public client() {}
 
-    public client(String id, String name, String email, String phone, String address, String notes, String createdAt, String updatedAt) {
+    public Client() {}
+
+    public Client(String id, String name, String email, String phone, String address, String notes, String createdAt, String updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -89,5 +95,13 @@ public class client {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Messages> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Messages> messages) {
+        this.messages = messages;
     }
 }
