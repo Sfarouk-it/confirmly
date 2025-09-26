@@ -38,12 +38,16 @@ public class WebhookService {
     }
 
     public ResponseEntity<String> handleWebhook(String payload, String signature) {
+        
+        System.out.println("111111111111111111111111111111111");
         if (isValidSignature(payload, signature)) {
+            System.out.println("333333333333333333333333333333");
             return ResponseEntity.status(401).body("Invalid signature");
         }
 
         JsonObject webhookEvent = JsonParser.parseString(payload).getAsJsonObject();
         if (isPageEvent(webhookEvent)) {
+            System.out.println("5555555555555555555555555555555555555");
             processWebhookEntries(webhookEvent);
         }
 
@@ -51,11 +55,13 @@ public class WebhookService {
     }
 
     private boolean isPageEvent(JsonObject webhookEvent) {
+        System.out.println("4444444444444444444444444444444444444444444");
         return webhookEvent.has("object") && 
                "page".equals(webhookEvent.get("object").getAsString());
     }
 
     private void processWebhookEntries(JsonObject webhookEvent) {
+        System.out.println("66666666666666666666666666666666666666666");
         JsonArray entries = webhookEvent.getAsJsonArray("entry");
         for (JsonElement entry : entries) {
             JsonObject entryObj = entry.getAsJsonObject();
@@ -65,6 +71,7 @@ public class WebhookService {
     }
 
     private void processMessaging(JsonArray messagingArray) {
+        System.out.println("77777777777777777777777777777777777777777");
         for (JsonElement message : messagingArray) {
             JsonObject messagingObj = message.getAsJsonObject();
             String senderId = messagingObj.getAsJsonObject("sender").get("id").getAsString();
@@ -78,6 +85,7 @@ public class WebhookService {
     }
 
     private void handleMessage(JsonObject messagingObj, String senderId) {
+        System.out.println("88888888888888888888888888888888888888888");
         String text = messagingObj.getAsJsonObject("message").get("text").getAsString();
         String responseText = apiCallService.generateResponse(text);
         sendTextMessage(senderId, responseText);
@@ -90,6 +98,8 @@ public class WebhookService {
     }
 
     public void sendTextMessage(String recipientId, String text) {
+
+        System.out.println("9999999999999999999999999999999");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         
@@ -113,6 +123,7 @@ public class WebhookService {
     }
     
     public boolean isValidSignature(String payload, String signature) {
+        System.out.println("22222222222222222222222222222222222");
         String expectedSignature = "sha1=" + calculateHMAC(payload, "2e87dd551c7b456dbd5d9db8a139297b");
         return expectedSignature.equals(signature);
     }
