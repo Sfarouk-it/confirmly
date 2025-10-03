@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 public class Messages {
     
     @Id
-    private String id;
+    private long id;
     private String senderId;
     private String text;
     private String timestamp;
@@ -20,18 +20,18 @@ public class Messages {
 
     public Messages() {}
 
-    public Messages(String id, String senderId, String text, String timestamp) {
+    public Messages(int id, String senderId, String text, String timestamp) {
         this.id = id;
         this.senderId = senderId;
         this.text = text;
         this.timestamp = timestamp;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
