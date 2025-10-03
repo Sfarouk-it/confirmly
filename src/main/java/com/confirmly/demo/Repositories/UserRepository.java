@@ -7,6 +7,4 @@ import com.confirmly.demo.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Custom queries if needed
-    User findByUsername(String username);
 }
