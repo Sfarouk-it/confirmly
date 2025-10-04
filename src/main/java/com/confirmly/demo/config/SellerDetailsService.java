@@ -17,17 +17,15 @@ public class SellerDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Seller seller = sellerRepository.findByUsername(username);
-        
-        if (seller == null) {
-            throw new UsernameNotFoundException("Seller not found");
-        } 
-        
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        Seller seller = sellerRepository.findByUsername(identifier)
+                .orElseGet(() -> sellerRepository.findByEmail(identifier)
+                        .orElseThrow(() -> new UsernameNotFoundException("Seller not found")));
+
         return org.springframework.security.core.userdetails.User.builder()
-                .username(seller.getUsername())
+                .username(seller.getUsername()) 
                 .password(seller.getPassword()) 
-                .roles("SELLER") 
+                .roles("SELLER")
                 .build();
     }
 }

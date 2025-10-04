@@ -12,7 +12,8 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
     // Find sellers by shop name
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
-    Seller findByUsername(String username);
+    Optional<Seller> findByUsername(String username);
+    Optional<Seller> findByEmail(String email);
     Seller findByShopName(String shopName);
 
 }
