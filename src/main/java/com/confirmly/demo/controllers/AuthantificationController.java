@@ -8,6 +8,8 @@ import com.confirmly.demo.DTO.SigneupRequest;
 import com.confirmly.demo.Services.SellerService;
 import com.confirmly.demo.model.Seller;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -65,12 +67,13 @@ public class AuthantificationController {
     }
     
     @GetMapping("login/facebook")
-    public String facebookLogin() {
+    public void facebookLogin(HttpServletResponse response) throws java.io.IOException {
         String url = FB_OAUTH_URL +
                 "?client_id=" + appId +
                 "&redirect_uri=" + redirectUri +
                 "&scope=pages_manage_metadata,pages_messaging";
-        return "redirect:" + url;
+        
+        response.sendRedirect(url);
     }
     
     
