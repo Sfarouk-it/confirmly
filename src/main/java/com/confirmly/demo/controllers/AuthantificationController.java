@@ -30,7 +30,7 @@ public class AuthantificationController {
     private final AuthenticationManager authManager;
 
     private String appId = "1241107080824621";
-    private String redirectUri = "http://localhost:8080/api/platformsAuth/facebook";
+    private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
 
     private final String FB_OAUTH_URL = "https://www.facebook.com/v17.0/dialog/oauth";
     
