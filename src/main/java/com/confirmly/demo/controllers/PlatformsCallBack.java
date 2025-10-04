@@ -66,7 +66,8 @@ public class PlatformsCallBack {
             String token = jwtUtil.generateToken(seller.getUsername());
             cookieUtil.createJwtCookie(rsp, token);
 
-            return ResponseEntity.ok("Registration and login successful!");
+            rsp.sendRedirect("https://confirmlydz.vercel.app/dashboard");
+            return null;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Registration failed: " + e.getMessage());
         }
