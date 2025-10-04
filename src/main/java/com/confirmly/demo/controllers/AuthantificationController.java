@@ -11,6 +11,7 @@ import com.confirmly.demo.model.Seller;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class AuthantificationController {
         return ResponseEntity.status(401).body("Invalid credentials");
     }
     
-    @PostMapping("login/facebook")
+    @GetMapping("login/facebook")
     public String facebookLogin() {
         String url = FB_OAUTH_URL +
                 "?client_id=" + appId +
