@@ -84,7 +84,7 @@ public class AuthantificationController {
                 "?client_id=" + appId +
                 "&redirect_uri=" + redirectUri +
                 "&response_type=code" +
-                "&scope=email,public_profile";
+                "&scope=pages_manage_metadata,pages_messaging";
         response.sendRedirect(url);
     }
     
