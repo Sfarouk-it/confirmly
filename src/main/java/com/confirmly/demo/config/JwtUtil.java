@@ -8,13 +8,16 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.security.Keys;
 
 import java.util.Date;
+
+import javax.crypto.SecretKey;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "mySecretKey12345"; // replace with strong key
+    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // replace with strong key
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
 
     public String generateToken(String username) {
