@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import com.confirmly.demo.model.Messages;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Messages, String> {
+public interface MessageRepository extends JpaRepository<Messages, Long> {
 }

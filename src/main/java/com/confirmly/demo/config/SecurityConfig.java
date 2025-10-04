@@ -5,17 +5,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
     private final SellerDetailsService sellerDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
 
-    public SecurityConfig(SellerDetailsService sellerDetailsService) {
+    public SecurityConfig(SellerDetailsService sellerDetailsService , JwtRequestFilter jwtRequestFilter) {
         this.sellerDetailsService = sellerDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Bean
@@ -31,12 +35,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // disable CSRF for API (optional if using JWT)
+            .csrf().disable() // JWT is stateless, CSRF not needed
             .authorizeHttpRequests()
-            .requestMatchers("/api/authantification/**", "/metaHookController/**", "/api/platformsAuth/**").permitAll() // allow signup & login
-            .anyRequest().authenticated() // protect everything else
+            .requestMatchers("/api/authantification/**", "/metaHookController/**", "/api/platformsAuth/**").permitAll()
+            .anyRequest().authenticated()
             .and()
-            .formLogin(); // optional: default form login
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // no sessions
+
+        // Add JWT filter before Spring Security filter
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

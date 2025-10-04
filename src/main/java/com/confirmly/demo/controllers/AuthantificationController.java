@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.confirmly.demo.DTO.LoginRequest;
 import com.confirmly.demo.DTO.SigneupRequest;
 import com.confirmly.demo.Services.SellerService;
+import com.confirmly.demo.config.CookieUtil;
+import com.confirmly.demo.config.JwtUtil;
 import com.confirmly.demo.model.Seller;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +30,13 @@ public class AuthantificationController {
     private SellerService sellerService;
 
     private final AuthenticationManager authManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private CookieUtil cookieUtil;
+
 
     private String appId = "1241107080824621";
     private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
@@ -55,12 +64,15 @@ public class AuthantificationController {
     }
 
     @PostMapping("/login/email")
-    public ResponseEntity<?> EmailLogin(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> EmailLogin(@RequestBody LoginRequest request , HttpServletResponse response) {
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
         if (auth.isAuthenticated()) {
+            String token = jwtUtil.generateToken(request.getUsername());
+            cookieUtil.createJwtCookie(response, token); 
+
             return ResponseEntity.ok("Login successful!");
         }
         return ResponseEntity.status(401).body("Invalid credentials");
@@ -71,8 +83,8 @@ public class AuthantificationController {
         String url = FB_OAUTH_URL +
                 "?client_id=" + appId +
                 "&redirect_uri=" + redirectUri +
-                "&scope=pages_manage_metadata,pages_messaging";
-        
+                "&response_type=code" +
+                "&scope=email";
         response.sendRedirect(url);
     }
     

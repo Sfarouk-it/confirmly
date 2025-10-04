@@ -9,6 +9,7 @@ public class Seller extends User {
     private String username;
     private String email;
     private String password;
+    private String facebookId;
     private String shopName;
 
     public Seller() {}
@@ -27,4 +28,7 @@ public class Seller extends User {
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public String getFacebookId() { return facebookId; }
+    public void setFacebookId(String facebookId) { this.facebookId = facebookId; }
+
 }
