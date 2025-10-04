@@ -33,7 +33,7 @@ public class SecurityConfig {
         http
             .csrf().disable() // disable CSRF for API (optional if using JWT)
             .authorizeHttpRequests()
-            .requestMatchers("/api/authantification/**", "/metaHookController/**").permitAll() // allow signup & login
+            .requestMatchers("/api/authantification/**", "/metaHookController/**", "/api/platformsAuth/**").permitAll() // allow signup & login
             .anyRequest().authenticated() // protect everything else
             .and()
             .formLogin(); // optional: default form login
