@@ -53,7 +53,11 @@ public class SellerService {
             return existingSeller.get(); 
         }
 
-        Seller seller = new Seller(username, email, FacebookId);
+        Seller seller = new Seller();
+        seller.setEmail(email);
+        seller.setUsername(username);
+        seller.setFacebookId(FacebookId);
+
         return sellerRepository.save(seller);
     }
 
