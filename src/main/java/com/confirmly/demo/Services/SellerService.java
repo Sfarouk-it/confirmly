@@ -26,6 +26,10 @@ public class SellerService {
         return sellerRepository.findByFacebookId(facebookId);
     }
 
+    public Optional<Seller> getSellerByUsername(String username) {
+        return sellerRepository.findByUsername(username);
+    }
+
     public Seller registerSeller(String username, String email, String password) throws Exception {
         if (sellerRepository.existsByUsername(username) || sellerRepository.existsByEmail(email)) {
             throw new Exception("Username or email already exists");

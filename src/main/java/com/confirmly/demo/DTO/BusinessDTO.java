@@ -29,5 +29,4 @@ public class BusinessDTO {
     public void setBusinessfield(String businessfield) {
         this.businessfield = businessfield;
     }
-    
 }
