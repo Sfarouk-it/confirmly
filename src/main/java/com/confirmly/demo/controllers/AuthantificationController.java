@@ -38,7 +38,7 @@ public class AuthantificationController {
     private CookieUtil cookieUtil;
 
 
-    private String appId = "1241107080824621";
+    private String appId = "2042157466556236";
     private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
     private final String FB_OAUTH_URL = "https://www.facebook.com/v17.0/dialog/oauth";
     
