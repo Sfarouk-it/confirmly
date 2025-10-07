@@ -7,12 +7,10 @@ import com.confirmly.demo.Services.SellerService;
 import com.confirmly.demo.config.CookieUtil;
 import com.confirmly.demo.config.JwtUtil;
 import com.confirmly.demo.model.Seller;
-
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +34,11 @@ public class PlatformsCallBack {
     private String appSecret = "2e87dd551c7b456dbd5d9db8a139297b";
     private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
     private final String FB_TOKEN_URL = "https://graph.facebook.com/v17.0/oauth/access_token";
+    private final String FB_ME_ACCOUNTS_URL = "https://graph.facebook.com/v17.0/me/accounts";
+    RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/facebook")
     public ResponseEntity<?> facebookAuthantification(@RequestParam String code ,HttpServletResponse rsp) {
-        RestTemplate restTemplate = new RestTemplate();
         String tokenRequestUrl = FB_TOKEN_URL +
                 "?client_id=" + appId +
                 "&redirect_uri=" + redirectUri +
@@ -70,6 +69,38 @@ public class PlatformsCallBack {
             return null;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Registration failed: " + e.getMessage());
+        }
+    }
+
+
+    public ResponseEntity<?> handleFacebookRedirect(@RequestParam(name = "code", required = false) String code,
+                                                    @RequestParam(name = "error", required = false) String error) {
+
+        if (error != null) {
+            return ResponseEntity.badRequest().body("User denied permissions or an error occurred: " + error);
+        }
+
+        try {
+            // Step 1: Exchange the code for a short-lived user access token
+            String tokenExchangeUrl = String.format(
+                "%s?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s",
+                FB_TOKEN_URL, appId, redirectUri, appSecret, code
+            );
+
+            Map<String, Object> tokenResponse = restTemplate.getForObject(tokenExchangeUrl, Map.class);
+            String userAccessToken = (String) tokenResponse.get("access_token");
+
+            // Step 2: Retrieve all pages the user manages, including their Page Access Tokens
+            String pagesUrl = FB_ME_ACCOUNTS_URL + "?access_token=" + userAccessToken;
+            Map<String, Object> pagesResponse = restTemplate.getForObject(pagesUrl, Map.class);
+
+            // Step 3: Return the pages and tokens (you can store them in your DB instead)
+            return ResponseEntity.ok(pagesResponse);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error during Facebook token exchange: " + e.getMessage());
         }
     }
     

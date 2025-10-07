@@ -17,11 +17,20 @@ public class GetPermissionController {
     
     @GetMapping("/facebookpermissions")
     public void testPermission(HttpServletResponse response) throws IOException  {
+        String scopes = String.join(",",
+                "pages_show_list",
+                "pages_manage_metadata",
+                "pages_read_engagement",
+                "pages_manage_engagement",
+                "pages_messaging"
+        );
+
         String url = FB_OAUTH_URL +
                 "?client_id=" + appId +
                 "&redirect_uri=" + redirectUri +
-                "&scope=pages_manage_metadata,pages_messaging";
-        
+                "&response_type=code" +
+                "&scope=" + scopes;
+
         response.sendRedirect(url);
     }
     
