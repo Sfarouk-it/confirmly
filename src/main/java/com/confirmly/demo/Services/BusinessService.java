@@ -20,6 +20,9 @@ public class BusinessService {
     public Business saveBusiness(BusinessDTO business ,String username) {
         Seller seller = sellerService.getSellerByUsername(username).orElse(null);
         if (seller == null) {
+            seller = sellerService.getSellerByEmail(username).orElse(null);
+        }
+        if (seller == null) {
             throw new RuntimeException("Seller not found with username: " + username);
         }
         Business newBusiness = new Business(business.getBusinessname(), business.getBusinesstype(), business.getBusinessfield());
