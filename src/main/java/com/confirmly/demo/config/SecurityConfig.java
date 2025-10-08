@@ -35,9 +35,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .cors() // ✅ هذا السطر يفعل إعداد CorsConfig الذي أنشأته
+            .and()
             .csrf().disable() // JWT is stateless, CSRF not needed
             .authorizeHttpRequests()
-            .requestMatchers("/api/authantification/**", "/metaHookController/**", "/api/platformsAuth/**").permitAll()
+            .requestMatchers(
+                "/api/authantification/**",
+                "/metaHookController/**",
+                "/api/platformsAuth/**"
+            ).permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement()
@@ -48,4 +54,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
