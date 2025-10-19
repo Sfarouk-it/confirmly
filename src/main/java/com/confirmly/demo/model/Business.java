@@ -1,11 +1,17 @@
 package com.confirmly.demo.model;
 
+import java.util.List;
+
+import com.confirmly.demo.interfaces.SocialMediaAccount;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,13 +30,16 @@ public class Business {
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SocialMediaAccount> accounts;
+
+
     public Business() {}
 
     public Business(String businessname, String businesstype, String businessfield) {
         this.businessname = businessname;
         this.businesstype = businesstype;
         this.businessfield = businessfield;
-        
     }
 
     public Long getId() {

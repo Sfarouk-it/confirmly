@@ -11,8 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/api/permissions")
 public class GetPermissionController {
 
+    
     private String appId = "2042157466556236";
-    private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
+    private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook/permissions";
     private final String FB_OAUTH_URL = "https://www.facebook.com/v17.0/dialog/oauth";
     
     @GetMapping("/facebookpermissions")

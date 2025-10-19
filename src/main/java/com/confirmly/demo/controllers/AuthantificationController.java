@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 
 
 @RestController
-@RequestMapping("/api/authantification")
+@RequestMapping("/api/auth")
 public class AuthantificationController {
 
     @Autowired
@@ -36,18 +35,13 @@ public class AuthantificationController {
 
     @Autowired
     private CookieUtil cookieUtil;
-
-
-    private String appId = "2042157466556236";
-    private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
-    private final String FB_OAUTH_URL = "https://www.facebook.com/v17.0/dialog/oauth";
     
     public AuthantificationController(AuthenticationManager authManager) {
         this.authManager = authManager;
     }
 
     
-    @PostMapping("/signup/email")
+    @PostMapping("/signup")
     public ResponseEntity<String> EmailSignup(@RequestBody SigneupRequest request) {
         
         try {
@@ -62,7 +56,7 @@ public class AuthantificationController {
         }
     }
 
-    @PostMapping("/login/email")
+    @PostMapping("/login")
     public ResponseEntity<?> EmailLogin(@RequestBody LoginRequest request , HttpServletResponse response) {
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -75,16 +69,6 @@ public class AuthantificationController {
             return ResponseEntity.ok("Login successful!");
         }
         return ResponseEntity.status(401).body("Invalid credentials");
-    }
-    
-    @GetMapping("login/facebook")
-    public void facebookLogin(HttpServletResponse response) throws java.io.IOException {
-        String url = FB_OAUTH_URL +
-                "?client_id=" + appId +
-                "&redirect_uri=" + redirectUri +
-                "&response_type=code" +
-                "&scope=email,public_profile";
-        response.sendRedirect(url);
     }
     
 }
