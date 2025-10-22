@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.confirmly.demo.Repositories.SellerRepository;
 import com.confirmly.demo.Services.FacebookService;
 import com.confirmly.demo.model.Seller;
-import com.confirmly.demo.DTO.FacebookAuthResponse;
-import com.confirmly.demo.DTO.FacebookAuthUrlResponse;
-import com.confirmly.demo.DTO.FacebookMessageRequest;
-import com.confirmly.demo.DTO.FacebookPageDto;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookMessageRequest;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDto;
 
 
 @RestController
@@ -37,7 +37,7 @@ public class FacebookController {
         Seller user = sellerRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
-        String authUrl = facebookService.generateAuthUrl(user.getId());
+        String authUrl = facebookService.generatePermissionsUrl(user.getId());
         return ResponseEntity.ok(new FacebookAuthUrlResponse(authUrl));
     }
     

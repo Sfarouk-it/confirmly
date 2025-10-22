@@ -3,6 +3,7 @@ package com.confirmly.demo.controllers;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
 import com.confirmly.demo.Services.FacebookService;
 import com.confirmly.demo.Services.InterfaceService;
 import com.confirmly.demo.Services.SellerService;
@@ -12,6 +13,7 @@ import com.confirmly.demo.model.Seller;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,19 +44,14 @@ public class FacebookAuthanticationController {
 
     private String appId = "2042157466556236";
     private String redirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
-    private final String FB_OAUTH_URL = "https://www.facebook.com/v17.0/dialog/oauth";
     private final String FB_TOKEN_URL = "https://graph.facebook.com/v17.0/oauth/access_token";
     private String appSecret = "85ae7b1fcc58c212feea85ef9399be8c";
     
-    @GetMapping("/login")
-    public void facebookLogin(HttpServletResponse response) throws java.io.IOException {
+    @GetMapping("/authontificate")
+    public ResponseEntity<?> facebookLogin() throws IOException {
         
-        String url = FB_OAUTH_URL +
-                "?client_id=" + appId +
-                "&redirect_uri=" + redirectUri +
-                "&response_type=code" +
-                "&scope=email,public_profile";
-        response.sendRedirect(url);
+        String authUrl = facebookService.generateAuthUrl();
+        return ResponseEntity.ok(new FacebookAuthUrlResponse(authUrl));
     }
 
     @GetMapping("/redirect")

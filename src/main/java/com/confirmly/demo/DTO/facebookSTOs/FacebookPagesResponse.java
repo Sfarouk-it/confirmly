@@ -1,6 +1,7 @@
-package com.confirmly.demo.DTO;
+package com.confirmly.demo.DTO.facebookSTOs;
 
 import java.util.List;
+
 import lombok.Data;
 
 @Data

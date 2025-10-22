@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.confirmly.demo.DTO.FacebookAuthResponse;
-import com.confirmly.demo.DTO.FacebookAuthUrlResponse;
-import com.confirmly.demo.DTO.FacebookMessageRequest;
-import com.confirmly.demo.DTO.FacebookPageData;
-import com.confirmly.demo.DTO.FacebookPageDto;
-import com.confirmly.demo.DTO.FacebookPagesResponse;
-import com.confirmly.demo.DTO.FacebookTokenResponse;
-import com.confirmly.demo.DTO.FacebookUserInfo;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookMessageRequest;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageData;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDto;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPagesResponse;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookTokenResponse;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookUserInfo;
 import com.confirmly.demo.Repositories.FacebookAccountRepository;
 import com.confirmly.demo.Repositories.FacebookPageRepository;
 import com.confirmly.demo.Repositories.UserRepository;
@@ -26,28 +26,21 @@ import com.confirmly.demo.model.Seller;
 
 @Service
 public class FacebookService {
-    @Value("${facebook.app.id}")
-    private String appId;
     
-    @Value("${facebook.app.secret}")
-    private String appSecret;
+    private String appId = "2042157466556236";
     
-    @Value("${facebook.redirect.uri}")
-    private String authRedirectUri;
-    @Value("${facebook.redirect.uri}")
-    private String permissionsRedirectUri;
-    
+    private String appSecret = "85ae7b1fcc58c212feea85ef9399be8c";
+
     private static final String FACEBOOK_GRAPH_API = "https://graph.facebook.com/v18.0";
     private static final String FACEBOOK_OAUTH_URL = "https://www.facebook.com/v18.0/dialog/oauth";
+    private String authRedirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
+    private String permissionsRedirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
     
     @Autowired
     private FacebookAccountRepository facebookAccountRepository;
     
     @Autowired
     private FacebookPageRepository facebookPageRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
     
     private final WebClient webClient = WebClient.builder().build();
     
@@ -99,7 +92,7 @@ public class FacebookService {
         FacebookUserInfo userInfo = getUserInfo(longLivedToken);
         
         // Save or update Facebook user
-        Seller user = userRepository.findById(userId)
+        Seller user = sellerRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
         FacebookAccount facebookAccount = facebookAccountRepository.findByFacebookId(userInfo.getId())
