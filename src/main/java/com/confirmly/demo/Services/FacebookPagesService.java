@@ -1,12 +1,14 @@
 package com.confirmly.demo.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.confirmly.demo.DTO.facebookDTOs.FacebookPageDTO;
 import com.confirmly.demo.Repositories.FacebookPageRepository;
 import com.confirmly.demo.model.FacebookAccount;
 import com.confirmly.demo.model.FacebookPage;
 
+@Service
 public class FacebookPagesService {
 
     @Autowired
