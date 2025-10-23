@@ -18,7 +18,7 @@ import com.confirmly.demo.model.Seller;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookMessageRequest;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDto;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDTO;
 
 
 @RestController
@@ -54,16 +54,7 @@ public class FacebookController {
         }
     }
     
-    @GetMapping("/pages")
-    public ResponseEntity<List<FacebookPageDto>> getUserPages(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Seller user = sellerRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        List<FacebookPageDto> pages = facebookService.getUserPages(user.getId());
-        return ResponseEntity.ok(pages);
-    }
-    
+    /* 
     @PostMapping("/send-message")
     public ResponseEntity<?> sendMessage(
             @RequestBody FacebookMessageRequest request,
@@ -79,18 +70,5 @@ public class FacebookController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-    
-    @DeleteMapping("/disconnect")
-    public ResponseEntity<?> disconnectFacebook(Authentication authentication) {
-        try {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Seller user = sellerRepository.findByUsername(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            
-            facebookService.disconnectFacebook(user.getId());
-            return ResponseEntity.ok("Facebook account disconnected successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-        }
-    }
+        */
 }

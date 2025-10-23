@@ -27,6 +27,10 @@ public class FacebookPage implements SocialMediaAccount {
         this.pageAccessToken = pageAccessToken;
     }
 
+    public FacebookPage() {
+        //TODO Auto-generated constructor stub
+    }
+
     @Override
     public String getSocialId() {
         return pageId;

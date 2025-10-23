@@ -39,6 +39,8 @@ public class FacebookAccount implements SocialMediaAccount {
     @OneToMany(mappedBy = "facebookAccount")
     private List<FacebookPage> pages; 
 
+    public FacebookAccount() {}
+
     public FacebookAccount(String facebookId, String name, String accessToken, boolean connected) {
         this.facebookId = facebookId;
         this.name = name;
@@ -52,6 +54,14 @@ public class FacebookAccount implements SocialMediaAccount {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
     }
 
     public String getEmail() {

@@ -1,27 +1,16 @@
 package com.confirmly.demo.Services;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookMessageRequest;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageData;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDto;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDTO;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookPagesResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookTokenResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookUserInfo;
-import com.confirmly.demo.Repositories.FacebookAccountRepository;
-import com.confirmly.demo.Repositories.FacebookPageRepository;
-import com.confirmly.demo.Repositories.UserRepository;
 import com.confirmly.demo.model.FacebookAccount;
-import com.confirmly.demo.model.FacebookPage;
 import com.confirmly.demo.model.Seller;
 
 @Service
@@ -37,10 +26,13 @@ public class FacebookService {
     private String permissionsRedirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
     
     @Autowired
-    private FacebookAccountRepository facebookAccountRepository;
-    
+    FacebookAccountsService fAccountsService;
+
     @Autowired
-    private FacebookPageRepository facebookPageRepository;
+    private FacebookPagesService facebookPagesService;
+   
+    @Autowired
+    private SellerService sellerService;
     
     private final WebClient webClient = WebClient.builder().build();
     
@@ -64,6 +56,40 @@ public class FacebookService {
                 .build()
                 .toUriString();
     }
+
+    public Seller handeleAuthCallback(String code){
+        String tokenUrl = UriComponentsBuilder.fromHttpUrl(FACEBOOK_GRAPH_API + "/oauth/access_token")
+                .queryParam("client_id", appId)
+                .queryParam("client_secret", appSecret)
+                .queryParam("redirect_uri", permissionsRedirectUri)
+                .queryParam("code", code)
+                .build()
+                .toUriString();
+
+        FacebookTokenResponse tokenResponse = webClient.get()
+                .uri(tokenUrl)
+                .retrieve()
+                .bodyToMono(FacebookTokenResponse.class)
+                .block();
+                
+        if (tokenResponse == null && tokenResponse.getAccessToken() == null) {
+            throw new RuntimeException("Failed to get access token from Facebook");
+        }
+
+        FacebookUserInfo userInfo = getUserInfo(tokenResponse.getAccessToken());
+
+        String Username = "fb_" + userInfo.getId();
+        Seller seller;
+        try {
+                seller = sellerService.registerSellerbyFacebook(Username, userInfo.getEmail(), userInfo.getId());
+        } catch (Exception e) {
+                return null;
+        }
+        
+        return seller;
+    }
+
+
     
     public FacebookAuthResponse handleCallback(String code, Long userId) {
         // Exchange code for access token
@@ -81,6 +107,7 @@ public class FacebookService {
                 .bodyToMono(FacebookTokenResponse.class)
                 .block();
         
+        
         if (tokenResponse == null || tokenResponse.getAccessToken() == null) {
             throw new RuntimeException("Failed to get access token from Facebook");
         }
@@ -92,24 +119,26 @@ public class FacebookService {
         FacebookUserInfo userInfo = getUserInfo(longLivedToken);
         
         // Save or update Facebook user
-        Seller user = sellerRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller user = sellerService.getSellerByUsername(userInfo.getId()).get();
         
-        FacebookAccount facebookAccount = facebookAccountRepository.findByFacebookId(userInfo.getId())
-                .orElse(new FacebookUser());
+        FacebookAccount facebookAccount = fAccountsService.getFacebookAccountByFacebookId(userInfo.getId()).get();
         
-        facebookUser.setFacebookId(userInfo.getId());
-        facebookUser.setName(userInfo.getName());
-        facebookUser.setEmail(userInfo.getEmail());
-        facebookUser.setAccessToken(tokenResponse.getAccessToken());
-        facebookUser.setLongLivedToken(longLivedToken);
-        facebookUser.setTokenExpiresAt(System.currentTimeMillis() + (tokenResponse.getExpiresIn() * 1000));
-        facebookUser.setUser(user);
-        
-        facebookAccountRepository.save(facebookUser);
+        if (facebookAccount == null) {
+            facebookAccount = fAccountsService.savefacebookAccount(
+                userInfo,
+                tokenResponse.getAccessToken(),
+                longLivedToken,
+                tokenResponse.getExpiresIn()
+            );
+            facebookAccount.setConnected(true);
+        } else {
+            facebookAccount.setAccessToken(tokenResponse.getAccessToken());
+            facebookAccount.setLongLivedToken(longLivedToken);
+            facebookAccount.setTokenExpiresAt(System.currentTimeMillis() + (tokenResponse.getExpiresIn() * 1000));
+        }
         
         // Fetch and save pages
-        fetchAndSavePages(facebookUser, longLivedToken);
+        fetchAndSavePages(facebookAccount, longLivedToken);
         
         return new FacebookAuthResponse(
             userInfo.getId(),
@@ -152,7 +181,7 @@ public class FacebookService {
                 .block();
     }
     
-    private void fetchAndSavePages(FacebookAccount facebookUser, String accessToken) {
+    private void fetchAndSavePages(FacebookAccount facebookAccount, String accessToken) {
         String url = UriComponentsBuilder.fromHttpUrl(FACEBOOK_GRAPH_API + "/me/accounts")
                 .queryParam("access_token", accessToken)
                 .build()
@@ -165,41 +194,16 @@ public class FacebookService {
                 .block();
         
         if (pagesResponse != null && pagesResponse.getData() != null) {
-            for (FacebookPageData pageData : pagesResponse.getData()) {
-                FacebookPage page = facebookPageRepository.findByPageId(pageData.getId())
-                        .orElse(new FacebookPage());
-                
-                page.setPageId(pageData.getId());
-                page.setPageName(pageData.getName());
-                page.setPageAccessToken(pageData.getAccessToken());
-                page.setCategory(pageData.getCategory());
-                page.setTasks(pageData.getTasks());
-                page.setFacebookUser(facebookUser);
-                
-                facebookPageRepository.save(page);
+            for (FacebookPageDTO pageData : pagesResponse.getData()) {
+                facebookPagesService.saveFacebookPage(pageData, facebookAccount);
             }
         }
     }
     
-    public List<FacebookPageDto> getUserPages(Long userId) {
-        FacebookAccount facebookUser = facebookAccountRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Facebook account not connected"));
-        
-        List<FacebookPage> pages = facebookPageRepository.findByFacebookUserId(facebookUser.getId());
-        
-        return pages.stream()
-                .map(page -> new FacebookPageDto(
-                    page.getPageId(),
-                    page.getPageName(),
-                    page.getCategory(),
-                    page.getTasks()
-                ))
-                .collect(Collectors.toList());
-    }
-    
+    /*
     public String sendMessage(Long userId, FacebookMessageRequest request) {
-        FacebookAccount facebookUser = facebookAccountRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Facebook account not connected"));
+        FacebookAccount facebookUser = FacebookAccountsService
+                .orElseThrow(() -> new RuntimeException("Facebook account not found for user"));
         
         FacebookPage page = facebookPageRepository.findByPageId(request.getPageId())
                 .orElseThrow(() -> new RuntimeException("Page not found"));
@@ -222,15 +226,5 @@ public class FacebookService {
         
         return response;
     }
-    
-    public void disconnectFacebook(Long userId) {
-        FacebookAccount facebookUser = facebookAccountRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Facebook account not connected"));
-        
-        List<FacebookPage> pages = facebookPageRepository.findByFacebookUserId(facebookUser.getId());
-        facebookPageRepository.deleteAll(pages);
-        
-
-        facebookAccountRepository.delete(facebookUser);
-    }
+         */
 }
