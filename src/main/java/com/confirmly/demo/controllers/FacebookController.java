@@ -18,7 +18,7 @@ import com.confirmly.demo.model.Seller;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookMessageRequest;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageef;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDTO;
 
 
 @RestController
