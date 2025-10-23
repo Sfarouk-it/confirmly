@@ -17,9 +17,9 @@ import com.confirmly.demo.model.Seller;
 @Service
 public class FacebookService {
     
-    private String appId = "2042157466556236";
+    private String appId = "1241107080824621";
     
-    private String appSecret = "85ae7b1fcc58c212feea85ef9399be8c";
+    private String appSecret = "2e87dd551c7b456dbd5d9db8a139297b";
 
     private static final String FACEBOOK_GRAPH_API = "https://graph.facebook.com/v18.0";
     private static final String FACEBOOK_OAUTH_URL = "https://www.facebook.com/v18.0/dialog/oauth";
