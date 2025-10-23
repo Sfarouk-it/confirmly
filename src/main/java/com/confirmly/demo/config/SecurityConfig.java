@@ -40,7 +40,7 @@ public class SecurityConfig {
             .csrf().disable() // JWT is stateless, CSRF not needed
             .authorizeHttpRequests()
             .requestMatchers(
-                "/api/authantification/**",
+                "/api/auth/**",
                 "/metaHookController/**",
                 "/api/platformsAuth/**"
             ).permitAll()
