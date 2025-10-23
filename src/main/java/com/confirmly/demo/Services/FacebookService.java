@@ -17,9 +17,9 @@ import com.confirmly.demo.model.Seller;
 @Service
 public class FacebookService {
     
-    private String appId = "1241107080824621";
+    private String appId = "1898179597398420";
     
-    private String appSecret = "2e87dd551c7b456dbd5d9db8a139297b";
+    private String appSecret = "596eac2836d70665a64b86d31e17d68c";
 
     private static final String FACEBOOK_GRAPH_API = "https://graph.facebook.com/v18.0";
     private static final String FACEBOOK_OAUTH_URL = "https://www.facebook.com/v18.0/dialog/oauth";
@@ -41,7 +41,7 @@ public class FacebookService {
         return UriComponentsBuilder.fromHttpUrl(FACEBOOK_OAUTH_URL)
                 .queryParam("client_id", appId)
                 .queryParam("redirect_uri", authRedirectUri)
-                .queryParam("scope", "email,public_profile")
+                .queryParam("scope", "pages_show_list,pages_messaging,pages_read_engagement,pages_manage_metadata")
                 .queryParam("response_type", "code")
                 .build()
                 .toUriString();
