@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.confirmly.demo.DTO.facebookSTOs.FacebookUserInfo;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookUserInfo;
 import com.confirmly.demo.Repositories.FacebookAccountRepository;
 import com.confirmly.demo.model.FacebookAccount;
 

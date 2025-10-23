@@ -1,12 +1,11 @@
 package com.confirmly.demo.model;
 
-import com.confirmly.demo.interfaces.SocialMediaAccount;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-public class FacebookPage implements SocialMediaAccount {
+public class FacebookPage {
     
     @Id
     private Long id;
@@ -17,6 +16,11 @@ public class FacebookPage implements SocialMediaAccount {
     @ManyToOne
     @JoinColumn(name = "facebook_account_id")
     private FacebookAccount facebookAccount;
+
+    @ManyToOne
+    @JoinColumn(name = "business_id")
+    private Business business;
+
 
     private String category;
     private String[] tasks;
@@ -31,27 +35,22 @@ public class FacebookPage implements SocialMediaAccount {
         //TODO Auto-generated constructor stub
     }
 
-    @Override
     public String getSocialId() {
         return pageId;
     }
 
-    @Override
     public String getName() {
         return pageName;
     }
 
-    @Override
     public String getPlatform() {
         return "Facebook Page";
     }
 
-    @Override
     public String getAccessToken() {
         return pageAccessToken;
     }
 
-    @Override
     public boolean isConnected() {
         return pageAccessToken != null && !pageAccessToken.isEmpty();
     }

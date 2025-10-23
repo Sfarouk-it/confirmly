@@ -1,4 +1,4 @@
-package com.confirmly.demo.DTO.facebookSTOs;
+package com.confirmly.demo.DTO.facebookDTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -2,7 +2,8 @@ package com.confirmly.demo.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
+
+import com.confirmly.demo.DTO.facebookDTOs.FacebookAuthUrlResponse;
 import com.confirmly.demo.Services.FacebookService;
 import com.confirmly.demo.config.CookieUtil;
 import com.confirmly.demo.config.JwtUtil;

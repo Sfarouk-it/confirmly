@@ -1,9 +1,6 @@
 package com.confirmly.demo.model;
 
 import java.util.List;
-
-import com.confirmly.demo.interfaces.SocialMediaAccount;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "facebook_account")
-public class FacebookAccount implements SocialMediaAccount {
+public class FacebookAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,12 +90,10 @@ public class FacebookAccount implements SocialMediaAccount {
         this.facebookId = facebookId;
     }
 
-    @Override
     public String getSocialId() {
         return facebookId;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -107,12 +102,10 @@ public class FacebookAccount implements SocialMediaAccount {
         this.name = name;
     }
 
-    @Override
     public String getPlatform() {
         return "Facebook";
     }
 
-    @Override
     public String getAccessToken() {
         return accessToken;
     }
@@ -121,7 +114,6 @@ public class FacebookAccount implements SocialMediaAccount {
         this.accessToken = accessToken;
     }
 
-    @Override
     public boolean isConnected() {
         return connected;
     }

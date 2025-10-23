@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.confirmly.demo.DTO.facebookDTOs.FacebookAuthResponse;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookAuthUrlResponse;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookMessageRequest;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookPageDTO;
 import com.confirmly.demo.Repositories.SellerRepository;
 import com.confirmly.demo.Services.FacebookService;
 import com.confirmly.demo.model.Seller;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookMessageRequest;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDTO;
 
 
 @RestController

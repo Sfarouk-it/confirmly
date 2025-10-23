@@ -5,11 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDTO;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPagesResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookTokenResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookUserInfo;
+
+import com.confirmly.demo.DTO.facebookDTOs.FacebookAuthResponse;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookPageDTO;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookPagesResponse;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookTokenResponse;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookUserInfo;
 import com.confirmly.demo.model.FacebookAccount;
 import com.confirmly.demo.model.Seller;
 

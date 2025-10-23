@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthUrlResponse;
+import com.confirmly.demo.DTO.facebookDTOs.FacebookAuthUrlResponse;
 import com.confirmly.demo.Services.SellerService;
 import com.confirmly.demo.model.Seller;
 

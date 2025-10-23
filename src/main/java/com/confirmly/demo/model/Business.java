@@ -2,8 +2,6 @@ package com.confirmly.demo.model;
 
 import java.util.List;
 
-import com.confirmly.demo.interfaces.SocialMediaAccount;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +29,10 @@ public class Business {
     private Seller seller;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SocialMediaAccount> accounts;
+    private List<FacebookAccount> facebookAccounts;
+
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FacebookPage> facebookPages;
 
 
     public Business() {}
