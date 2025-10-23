@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FacebookPageDTO {
+public class FacebookPageef {
     private String pageId;
     private String name;
     private String category;

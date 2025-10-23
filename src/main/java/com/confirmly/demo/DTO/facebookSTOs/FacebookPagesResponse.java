@@ -6,5 +6,5 @@ import lombok.Data;
 
 @Data
 public class FacebookPagesResponse {
-    private List<FacebookPageDTO> data;
+    private List<FacebookPageef> data;
 }

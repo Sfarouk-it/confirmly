@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookAuthResponse;
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDTO;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageef;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookPagesResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookTokenResponse;
 import com.confirmly.demo.DTO.facebookSTOs.FacebookUserInfo;
@@ -194,7 +194,7 @@ public class FacebookService {
                 .block();
         
         if (pagesResponse != null && pagesResponse.getData() != null) {
-            for (FacebookPageDTO pageData : pagesResponse.getData()) {
+            for (FacebookPageef pageData : pagesResponse.getData()) {
                 facebookPagesService.saveFacebookPage(pageData, facebookAccount);
             }
         }

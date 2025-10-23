@@ -2,7 +2,7 @@ package com.confirmly.demo.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.confirmly.demo.DTO.facebookSTOs.FacebookPageDTO;
+import com.confirmly.demo.DTO.facebookSTOs.FacebookPageef;
 import com.confirmly.demo.Repositories.FacebookPageRepository;
 import com.confirmly.demo.model.FacebookAccount;
 import com.confirmly.demo.model.FacebookPage;
@@ -17,7 +17,7 @@ public class FacebookPagesService {
         return page;
     }
 
-    public FacebookPage saveFacebookPage(FacebookPageDTO pagedto, FacebookAccount facebookAccount) {
+    public FacebookPage saveFacebookPage(FacebookPageef pagedto, FacebookAccount facebookAccount) {
         FacebookPage page = new FacebookPage();
         
         page.setPageId(pagedto.getPageId());
