@@ -23,7 +23,7 @@ public class FacebookService {
 
     private static final String FACEBOOK_GRAPH_API = "https://graph.facebook.com/v18.0";
     private static final String FACEBOOK_OAUTH_URL = "https://www.facebook.com/v18.0/dialog/oauth";
-    private String authRedirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
+    private String authRedirectUri = "https://confirmly.onrender.com/api/auth/facebook/redirect";
     private String permissionsRedirectUri = "https://confirmly.onrender.com/api/platformsAuth/facebook";
     
     @Autowired
