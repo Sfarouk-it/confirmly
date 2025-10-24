@@ -38,7 +38,7 @@ public class FacebookController {
         Seller user = sellerRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
-        String authUrl = facebookService.generatePermissionsUrl(user.getId());
+        String authUrl = facebookService.generatePermissionsUrl(user.getId().toString(0));
         return ResponseEntity.ok(new FacebookAuthUrlResponse(authUrl));
     }
     
@@ -48,7 +48,7 @@ public class FacebookController {
             @RequestParam String state) {
         try {
             Long userId = Long.parseLong(state);
-            FacebookAuthResponse response = facebookService.handleCallback(code, userId);
+            FacebookAuthResponse response = facebookService.handlePermissionsCallback(code, userId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

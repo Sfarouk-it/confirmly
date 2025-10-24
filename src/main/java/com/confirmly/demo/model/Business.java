@@ -83,5 +83,17 @@ public class Business {
         this.seller = seller;
     }
 
+    public List<FacebookAccount> getFacebookAccounts() {
+        return facebookAccounts;
+    }
+
+    public void setFacebookAccounts(List<FacebookAccount> facebookAccounts) {
+        this.facebookAccounts = facebookAccounts;
+    }
+
+    public void addFacebookAccount(FacebookAccount facebookAccount) {
+        facebookAccounts.add(facebookAccount);
+    }
+
 
 }

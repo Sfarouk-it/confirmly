@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.confirmly.demo.DTO.facebookDTOs.FacebookUserInfo;
 import com.confirmly.demo.Repositories.FacebookAccountRepository;
+import com.confirmly.demo.model.Business;
 import com.confirmly.demo.model.FacebookAccount;
 
 @Service
@@ -20,7 +21,7 @@ public class FacebookAccountsService {
     }
 
 
-    public FacebookAccount savefacebookAccount(FacebookUserInfo userInfo ,String accessToken, String longLivedToken, Long tokenExpiresAt) {
+    public FacebookAccount savefacebookAccount(FacebookUserInfo userInfo ,String accessToken, String longLivedToken, Long tokenExpiresAt, Business business) {
         FacebookAccount account = new FacebookAccount();
         account.setFacebookId(userInfo.getId());
         account.setName(userInfo.getName());
@@ -28,6 +29,7 @@ public class FacebookAccountsService {
         account.setAccessToken(accessToken);
         account.setLongLivedToken(longLivedToken);
         account.setTokenExpiresAt(System.currentTimeMillis() + (tokenExpiresAt * 1000));
+        account.setBusiness(business);
 
         return facebookAccountRepository.save(account);
     }

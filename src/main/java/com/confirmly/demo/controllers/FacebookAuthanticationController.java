@@ -34,23 +34,36 @@ public class FacebookAuthanticationController {
     RestTemplate restTemplate = new RestTemplate();
     
     @GetMapping("/authontificate")
-    public ResponseEntity<?> facebookLogin() throws IOException {
-        
+    public ResponseEntity<?> facebookLogin() throws IOException {   
         String authUrl = facebookService.generateAuthUrl();
         return ResponseEntity.ok(new FacebookAuthUrlResponse(authUrl));
     }
 
     @GetMapping("/redirect")
-    public ResponseEntity<?> facebookAuthantification(@RequestParam String code ,HttpServletResponse rsp) {
+    public void facebookAuthantification(@RequestParam String code, HttpServletResponse rsp) throws IOException {
         try {
             Seller seller = facebookService.handeleAuthCallback(code);
             String token = jwtUtil.generateToken(seller.getUsername());
             cookieUtil.createJwtCookie(rsp, token);
 
-            return ResponseEntity.ok("Registration and authentication successful");
+            
+            rsp.setContentType("text/html");
+            rsp.getWriter().write(
+                "<script>" +
+                "window.opener.postMessage({type: 'FB_LOGIN_SUCCESS', user: '" + seller.getUsername() + "'}, '*');" +
+                "window.close();" +
+                "</script>"
+            );
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Registration failed: " + e.getMessage());
+            rsp.setContentType("text/html");
+            rsp.getWriter().write(
+                "<script>" +
+                "window.opener.postMessage({type: 'FB_LOGIN_FAILED', error: '" + e.getMessage() + "'}, '*');" +
+                "window.close();" +
+                "</script>"
+            );
         }
     }
+
 
 }

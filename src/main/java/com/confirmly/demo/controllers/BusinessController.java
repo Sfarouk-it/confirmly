@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.confirmly.demo.DTO.BusinessDTO;
 import com.confirmly.demo.Services.BusinessService;
 import com.confirmly.demo.config.JwtUtil;
+import com.confirmly.demo.model.Business;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -34,8 +35,14 @@ public class BusinessController {
             return ResponseEntity.status(401).body("Unauthorized: missing or invalid JWT");
         }
 
-        businessService.saveBusiness(businessDTO, username);
-        return ResponseEntity.ok("Business info saved successfully");
+        Business savedBusiness = businessService.saveBusiness(businessDTO, username);
+        BusinessDTO responseDTO = new BusinessDTO();
+        responseDTO.setId(savedBusiness.getId());
+        responseDTO.setBusinessname(savedBusiness.getBusinessname());
+        responseDTO.setBusinesstype(savedBusiness.getBusinesstype());
+        responseDTO.setBusinessfield(savedBusiness.getBusinessfield());
+
+        return ResponseEntity.ok(responseDTO);
     }
     
     

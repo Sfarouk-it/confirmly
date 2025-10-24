@@ -11,6 +11,7 @@ import com.confirmly.demo.DTO.facebookDTOs.FacebookPageDTO;
 import com.confirmly.demo.DTO.facebookDTOs.FacebookPagesResponse;
 import com.confirmly.demo.DTO.facebookDTOs.FacebookTokenResponse;
 import com.confirmly.demo.DTO.facebookDTOs.FacebookUserInfo;
+import com.confirmly.demo.model.Business;
 import com.confirmly.demo.model.FacebookAccount;
 import com.confirmly.demo.model.Seller;
 
@@ -34,6 +35,8 @@ public class FacebookService {
    
     @Autowired
     private SellerService sellerService;
+
+    private BusinessService businessService;
     
     private final WebClient webClient = WebClient.builder().build();
     
@@ -41,18 +44,18 @@ public class FacebookService {
         return UriComponentsBuilder.fromHttpUrl(FACEBOOK_OAUTH_URL)
                 .queryParam("client_id", appId)
                 .queryParam("redirect_uri", authRedirectUri)
-                .queryParam("scope", "pages_show_list,pages_messaging,pages_read_engagement,pages_manage_metadata")
+                .queryParam("scope", "email,public_profile")
                 .queryParam("response_type", "code")
                 .build()
                 .toUriString();
     }
 
-    public String generatePermissionsUrl(Long userId) {
+    public String generatePermissionsUrl(String businessID) {
         return UriComponentsBuilder.fromHttpUrl(FACEBOOK_OAUTH_URL)
                 .queryParam("client_id", appId)
                 .queryParam("redirect_uri", permissionsRedirectUri)
                 .queryParam("scope", "pages_show_list,pages_messaging,pages_read_engagement,pages_manage_metadata")
-                .queryParam("state", userId.toString())
+                .queryParam("state", businessID)
                 .queryParam("response_type", "code")
                 .build()
                 .toUriString();
@@ -92,7 +95,7 @@ public class FacebookService {
 
 
     
-    public FacebookAuthResponse handleCallback(String code, Long userId) {
+    public FacebookAuthResponse handlePermissionsCallback(String code, Long businessID) {
         // Exchange code for access token
         String tokenUrl = UriComponentsBuilder.fromHttpUrl(FACEBOOK_GRAPH_API + "/oauth/access_token")
                 .queryParam("client_id", appId)
@@ -119,19 +122,21 @@ public class FacebookService {
         // Get user info
         FacebookUserInfo userInfo = getUserInfo(longLivedToken);
         
-        // Save or update Facebook user
-        Seller user = sellerService.getSellerByUsername(userInfo.getId()).get();
+        Business business = businessService.getBusinessById(businessID);
+        
         
         FacebookAccount facebookAccount = fAccountsService.getFacebookAccountByFacebookId(userInfo.getId()).get();
         
         if (facebookAccount == null) {
+
             facebookAccount = fAccountsService.savefacebookAccount(
                 userInfo,
                 tokenResponse.getAccessToken(),
                 longLivedToken,
-                tokenResponse.getExpiresIn()
+                tokenResponse.getExpiresIn(),
+                business
             );
-            facebookAccount.setConnected(true);
+            
         } else {
             facebookAccount.setAccessToken(tokenResponse.getAccessToken());
             facebookAccount.setLongLivedToken(longLivedToken);

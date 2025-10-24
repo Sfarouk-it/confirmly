@@ -31,5 +31,10 @@ public class BusinessService {
         
         return businessRepository.save(newBusiness);
     }
+
+    public Business getBusinessById(Long id) {
+        return businessRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+    }
 }
 
