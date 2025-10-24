@@ -44,7 +44,7 @@ public class FacebookService {
         return UriComponentsBuilder.fromHttpUrl(FACEBOOK_OAUTH_URL)
                 .queryParam("client_id", appId)
                 .queryParam("redirect_uri", authRedirectUri)
-                .queryParam("scope", "email,public_profile")
+                .queryParam("scope", "pages_show_list,pages_messaging,pages_read_engagement,pages_manage_metadata")
                 .queryParam("response_type", "code")
                 .build()
                 .toUriString();
